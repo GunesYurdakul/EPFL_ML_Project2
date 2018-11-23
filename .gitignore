@@ -1,3 +1,4 @@
+.idea/
 src/__pycache__
 src/.ipynb_checkpoints
 data/train_neg_full.txt
