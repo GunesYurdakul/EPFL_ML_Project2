@@ -15,6 +15,16 @@ class GloveModel:
         self.alpha = alpha
         self.epochs = epochs
         self.nmax = nmax
+        self.model = None
+
+        with open('../helpers/vocab.pkl', 'rb') as file:
+            self.vocab = pickle.load(file)
+
+    def get_name(self):
+        return 'glove'
+
+    def get_model(self):
+        return self.model
 
     def train(self):
 
@@ -36,3 +46,11 @@ class GloveModel:
                 ys[jy, :] += scale * x
 
         np.save('word_embeddings_glove', xs)
+
+    def load_model(self, data_path):
+        self.model = np.load(data_path)
+
+    def get_vocab(self):
+        return self.vocab
+
+

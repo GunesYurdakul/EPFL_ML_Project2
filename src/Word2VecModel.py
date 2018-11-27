@@ -14,7 +14,10 @@ class Word2VecModel:
         return self.vector_size
 
     def get_model(self):
-        return self.model
+        return self.model.wv
+
+    def get_name(self):
+        return 'w2v'
 
     def load_dataset(self, data_path):
         if len(self.dataset) == 0:
@@ -62,3 +65,6 @@ class Word2VecModel:
 
         self.model.save('model_word2vec_' + str(self.vector_size) + '.bin')
         print("Word2Vec Model saved")
+
+    def load_model(self, data_path):
+        self.model = Word2Vec.load(data_path)
