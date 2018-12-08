@@ -23,7 +23,13 @@ class Word2VecModel:
         if len(self.dataset) == 0:
             with open(data_path, 'rb') as file:
                 self.dataset = pickle.load(file)
-
+                
+    def __tokenize(self, line):
+        line=re.sub(r'\d+', '', line)
+        tokenizer = RegexpTokenizer(r'\w+')
+        tokens = tokenizer.tokenize(line)
+        return tokens
+    
     def __read_dataset(self, data_path, delete_substr):
         with open(data_path) as f:
             lines = f.readlines()
@@ -42,7 +48,7 @@ class Word2VecModel:
                 if i % 10000 == 0:
                     print("{} lines processed".format(i))
 
-                self.dataset.append(line.split())
+                self.dataset.append(self.__tokenize(line))
 
     def read_text(self, negative_datapath, positive_datapath, delete_substr):
 
