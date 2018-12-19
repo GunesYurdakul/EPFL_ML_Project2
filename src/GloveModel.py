@@ -4,21 +4,29 @@ import numpy as np
 
 class GloveModel:
 
-    def __init__(self, cooc_path, embedding_dim=20, eta=0.001, alpha= 0.75, epochs=10, nmax=100):
-        print("loading cooccurrence matrix")
+    def __init__(self, cooc_path, embedding_dim, eta=0.001, alpha= 0.75, epochs=10, nmax=100, ready_model=True):
 
-        with open(cooc_path, 'rb') as f:
-            self.cooc_matrix = pickle.load(f)
+        if ready_model:
+            with open(cooc_path, 'rb') as f:
+                self.model = pickle.load(f)
 
-        self.embedding_dim = embedding_dim
-        self.eta = eta
-        self.alpha = alpha
-        self.epochs = epochs
-        self.nmax = nmax
-        self.model = None
+            self.embedding_dim = embedding_dim
 
-        with open('../helpers/vocab.pkl', 'rb') as file:
-            self.vocab = pickle.load(file)
+        else:
+            print("loading cooccurrence matrix")
+
+            with open(cooc_path, 'rb') as f:
+                self.cooc_matrix = pickle.load(f)
+
+            self.embedding_dim = embedding_dim
+            self.eta = eta
+            self.alpha = alpha
+            self.epochs = epochs
+            self.nmax = nmax
+            self.model = None
+
+            with open('../helpers/vocab.pkl', 'rb') as file:
+                self.vocab = pickle.load(file)
 
     def get_name(self):
         return 'glove'
@@ -45,10 +53,16 @@ class GloveModel:
                 xs[ix, :] += scale * y
                 ys[jy, :] += scale * x
 
-        np.save('word_embeddings_glove', xs)
+        np.save('glove_'+self.embedding_dim, xs)
 
-    def load_model(self, data_path):
-        self.model = np.load(data_path)
+    def load_model(self, data_path, embedding_size):
+        with open(data_path, 'rb') as f:
+            self.model = pickle.load(f)
+
+        self.embedding_dim = embedding_size
+
+    def get_embedding_size(self):
+        return self.embedding_dim
 
     def get_vocab(self):
         return self.vocab
